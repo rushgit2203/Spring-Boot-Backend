@@ -13,6 +13,10 @@ Employee updateEmployee(Employee employee,long id);
 
 Employee deleteEmployee(long id);
 
+Employee getEmployeeByFirstName(String firstName);
+
+Employee getEmployeeByLastName(String lastName);
+
 // in interfaces, we can only have abstract methods and variables
     // we can not have the method body
     //it represents an is-a relationship

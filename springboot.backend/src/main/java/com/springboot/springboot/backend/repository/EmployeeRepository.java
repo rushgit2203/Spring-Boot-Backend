@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 //internally provides annotation @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+    Employee findByFirstName(String firstName);
+    Employee findByLastName(String lastName);
 }

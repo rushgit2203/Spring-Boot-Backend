@@ -54,13 +54,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         // using lambda expression
 
-        return employeeRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Employee","Id",id));
+        return employeeRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Employee","Id",id,"customMessage"));
     }
 
     @Override
     public Employee updateEmployee(Employee employee, long id) {
         //we need to check whether an employee with given id exists or not
-        Employee existingEmployee = employeeRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Employee","Id",id));
+        Employee existingEmployee = employeeRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Employee","Id",id,"customMessage"));
 
         // swapping of data
         existingEmployee.setFirstName(employee.getFirstName());
@@ -74,10 +74,38 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee deleteEmployee(long id) {
         //check whether the employee exists in the database or not
-        Employee employeeToDelete= employeeRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Employee","Id",id));
+        Employee employeeToDelete= employeeRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Employee","Id",id,"customMessage"));
         employeeRepository.deleteById(id);
         return employeeToDelete;
 //        I added a variable employeeToDelete to store the employee before it gets deleted.
+    }
+
+    @Override
+    public Employee getEmployeeByFirstName(String firstName) {
+
+        Employee employee = employeeRepository.findByFirstName(firstName);
+        if(null!=employee){
+            return employeeRepository.findByFirstName(firstName);
+        }
+        else {
+            throw new ResourceNotFoundException("Employee","Id",firstName,"customMessage");
+        }
+
+    }
+
+    @Override
+    public Employee getEmployeeByLastName(String lastName) {
+        Employee employee=employeeRepository.findByLastName(lastName);
+        if(null!=employee)
+        {
+            return employee;
+//            return employeeRepository.findByLastName(lastName);
+        }
+        else {
+            throw new ResourceNotFoundException("Employee", "Last Name", lastName, "Could not find employee with last name");
+        }
+
+
     }
 
 

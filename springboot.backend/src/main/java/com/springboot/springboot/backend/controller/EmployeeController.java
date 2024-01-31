@@ -1,10 +1,12 @@
 package com.springboot.springboot.backend.controller;
 
+import com.springboot.springboot.backend.exception.ResourceNotFoundException;
 import com.springboot.springboot.backend.model.Employee;
 import com.springboot.springboot.backend.services.EmployeeService;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,10 +32,42 @@ public class EmployeeController {
     }
 //    build get all employees REST api
 
-    @GetMapping
+    @GetMapping("all")
     public List<Employee>getAllEmployees(){
         return employeeService.getAllEmployees();
     }
+
+    @GetMapping
+    public ResponseEntity <Employee> getEmployeeByFirstName(@RequestParam (value = "firstName") String firstName){
+        return new ResponseEntity<Employee>( employeeService.getEmployeeByFirstName(firstName),HttpStatus.OK);
+    }
+
+
+    @GetMapping("byLastName")
+    public ResponseEntity<Employee> getEmployeeByLastName(@RequestParam(value = "lastName") String lastName){
+        try {
+            Employee foundEmployee = employeeService.getEmployeeByLastName(lastName);
+            return  new ResponseEntity<Employee>(foundEmployee,HttpStatus.OK);
+        }
+        catch (ResourceNotFoundException e)
+        {
+            throw new ResourceNotFoundException("Employee",lastName,"could not find employee with last name", "customMessage");
+//            throw new ResourceNotFoundException("Employee",lastName,"could not find employee with last name", e.getCustomMessage());
+        }
+    }
+//            return  new ResponseEntity<Employee>(employeeService.getEmployeeByLastName(lastName),HttpStatus.OK);
+
+
+//    @GetMapping("byLastName")
+//    public ResponseEntity<Employee> getEmployeeByLastName(@RequestParam(value = "lastName") String lastName) {
+//        try {
+//            Employee foundEmployee = employeeService.getEmployeeByLastName(lastName);
+//            return new ResponseEntity<>(foundEmployee, HttpStatus.OK);
+//        } catch (ResourceNotFoundException e) {
+//            //  error message for the specific case of searching by last name
+//            throw new ResourceNotFoundException("Employee", "Last Name", lastName, "Could not find employee with last name");
+//        }
+//    }
 
 
     //  build  get employee by id REST api
